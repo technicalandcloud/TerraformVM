@@ -1,24 +1,12 @@
-variable "resource_group_location" {
-  type        = string
-  default     = "northeurope"
-  description = "Location of the resource group."
-}
-
-variable "resource_group_name_prefix" {
-  type        = string
-  default     = "rg-terraform"
-  description = "Prefix of the resource group name that's combined with a random ID so name is unique in your Azure subscription."
-}
-
 variable "vm_name" {
   description = "VM names"
-  default = "VM-"
+  default = "VM"
   type  = string
 }
 
 variable "vm_count" {
-  description = "Nombre de VM"
-  default = 5
+  description = "Number of VM"
+  default = 108
   type = string
 }
 variable "nic_name" {
@@ -27,7 +15,23 @@ variable "nic_name" {
   type  = string
 }
 variable "nic" {
-  description = "Nombre de nic"
-  default = 5
+  description = "Number of nic"
+  default = 108
+  type = string
+}
+variable "secret_name" {
+  description = "Name of secret"
+  default = "secret"
+  type = string
+}
+variable "secret" {
+  description = "Number of secret KeyVault"
+  default = 108
+  type = string
+}
+
+variable "randomPassword" {
+  description = "Number of random password"
+  default = 108
   type = string
 }
