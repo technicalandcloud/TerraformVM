@@ -1,10 +1,10 @@
-#Creation Resource Group
+#Create RG
 resource "azurerm_resource_group" "rg" {
   location = "North Europe"
   name     = "ThankYou108"
 }
 
-# Creation virtual network
+# Create VNet
 resource "azurerm_virtual_network" "VNet" {
   name                = "Vnet"
   address_space       = ["10.0.0.0/16"]
@@ -12,14 +12,14 @@ resource "azurerm_virtual_network" "VNet" {
   resource_group_name = azurerm_resource_group.rg.name
 }
 
-# Creation subnet
+# Create Subnet
 resource "azurerm_subnet" "Subnet" {
   name                 = "Subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.VNet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
-# Creation subnet
+# Create Bastion Subnet
 resource "azurerm_subnet" "AzureBastionSubnet" {
   name                 = "AzureBastionSubnet"
   resource_group_name  = azurerm_resource_group.rg.name
@@ -27,7 +27,7 @@ resource "azurerm_subnet" "AzureBastionSubnet" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
-#Création du Bastion
+#Create IP Public of Bastion
 resource "azurerm_public_ip" "BastionPublic"{
   name                = "MyIP"
   location            = azurerm_resource_group.rg.location
@@ -35,7 +35,7 @@ resource "azurerm_public_ip" "BastionPublic"{
   allocation_method   = "Static"
   sku                 = "Standard"
 }
-
+#Create Bastion
 resource "azurerm_bastion_host" "BastionVM" {
   name                = "MyBastion"
   location            = azurerm_resource_group.rg.location
@@ -48,7 +48,7 @@ resource "azurerm_bastion_host" "BastionVM" {
   }
 }
 
-#Creation NSG
+#Create NSG
 
 resource "azurerm_network_security_group" "NSG" {
   name                = "my-nsg"
@@ -67,13 +67,13 @@ resource "azurerm_network_security_group" "NSG" {
     destination_address_prefix = "*"
   }
 }
-
+#Associeate NSG of Subnet
 resource "azurerm_subnet_network_security_group_association" "nsg-assosiation" {
 subnet_id                 = azurerm_subnet.Subnet.id
 network_security_group_id = azurerm_network_security_group.NSG.id
 }
 
-# Creation Nic
+# Create NIC
 resource "azurerm_network_interface" "nic_name" {
     count = var.nic
   name                = "${var.nic_name}-${count.index}"
@@ -86,7 +86,7 @@ resource "azurerm_network_interface" "nic_name" {
     private_ip_address_allocation = "Dynamic"
   }
 }
-#generation mot de passe aléatoire 
+#Generate random Password
 resource "random_password" "password" {
   count = var.randomPassword
   length           = 16
@@ -113,7 +113,7 @@ resource "azurerm_key_vault" "keyvault" {
     ]
   }
 }
-#Dans ce Keyvault stocke le(s) mot de passe admin 
+#Store Random Password in Keyvault
 resource "azurerm_key_vault_secret" "passwordadmin" {
   count = var.secret
   name         = "passwordadmin-${count.index}"
@@ -122,7 +122,7 @@ resource "azurerm_key_vault_secret" "passwordadmin" {
 
 }
 
-# Create virtual machine
+# Create Virtual Machine
 resource "azurerm_windows_virtual_machine" "vm" {
   count                 = var.vm_count  
   name                  = "${var.vm_name}-${count.index}"
