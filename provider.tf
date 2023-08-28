@@ -4,11 +4,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~>2.0"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~>3.0"
+      version = ">= 3.63.0"
     }
     tls = {
       source = "hashicorp/tls"
@@ -18,5 +14,15 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {    
+    }
+}
+
+terraform {
+   backend "azurerm" {
+    resource_group_name  = "ResourceGroup Of Storage Account"
+    storage_account_name = "Storage Account Name for stock you Tf"
+    container_name       = "Storage Account Container Name"
+    key                  = "Key of your storage account"
+   } 
 }
